@@ -11,6 +11,7 @@ export function App() {
   const [previewControls, setPreviewControls] = useState(initial);
   const [isRendering, setIsRendering] = useState(false);
   const renderTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
   const schedulePreview = (next: Controls) => {
     if (renderTimer.current) clearTimeout(renderTimer.current);
     setIsRendering(true);
@@ -53,6 +54,20 @@ export function App() {
   const advancedCode = [["sourceCount", controls.sourceCount], ["sourceSize", controls.sourceSize], ["separation", controls.separation], ["blur", controls.blur], ["grainAmount", controls.grainAmount], ["grainSize", controls.grainSize]].filter(([, value]) => value !== undefined).map(([key, value]) => `  ${key}={${value}}`).join("\n");
   const code = `<GenerativeVisual\n  seed="${controls.seed}"\n  colors={${JSON.stringify(controls.colors)}}\n  complexity={${controls.complexity}}\n  contrast={${controls.contrast}}\n  distortion={${controls.distortion}}\n  softness={${controls.softness}}\n  texture={${controls.texture}}${advancedCode ? `\n${advancedCode}` : ""}\n/>`;
   const randomize = () => update("seed", crypto.randomUUID().slice(0, 8));
+  const copyCode = () => navigator.clipboard?.writeText(code);
+  const downloadSvg = () => {
+    const svg = previewRef.current?.querySelector("svg");
+    if (!svg) return;
+    const blob = new Blob([new XMLSerializer().serializeToString(svg)], { type: "image/svg+xml" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${controls.seed || "visual"}.svg`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 500);
+  };
   return <main className="page">
     <header className="masthead"><h1>Generative Visual</h1></header>
     <section className="workbench"><aside className="controls"><div className="control-heading"><span>Playground</span></div>
@@ -62,8 +77,8 @@ export function App() {
       <Control label="Complexity" value={controls.complexity} onChange={(value) => update("complexity", value)} /><Control label="Contrast" value={controls.contrast} onChange={(value) => update("contrast", value)} /><Control label="Distortion" value={controls.distortion} onChange={(value) => update("distortion", value)} /><Control label="Softness" value={controls.softness} onChange={(value) => update("softness", value)} /><Control label="Texture" value={controls.texture} onChange={(value) => update("texture", value)} />
       <details style={{ margin: "20px 0 24px", borderTop: "1px solid #383630", paddingTop: 16 }}><summary style={{ cursor: "pointer", color: "#a8a096", fontSize: 12 }}>Advanced settings</summary><div style={{ paddingTop: 20 }}><IntegerControl label="Source count" value={sourceCount} min={3} max={10} onChange={(value) => update("sourceCount", value)} /><AdvancedControl label="Source size" value={sourceSize} min={0.35} max={1.15} onChange={(value) => update("sourceSize", value)} /><AdvancedControl label="Separation" value={separation} onChange={(value) => update("separation", value)} /><AdvancedControl label="Blur" value={blur} min={0.1} onChange={(value) => update("blur", value)} /><AdvancedControl label="Grain amount" value={grainAmount} onChange={(value) => update("grainAmount", value)} /><AdvancedControl label="Grain size" value={grainSize} onChange={(value) => update("grainSize", value)} /></div></details>
       <label className="check"><input type="checkbox" checked={controls.vignette} onChange={(event) => update("vignette", event.target.checked)} /> Vignette</label><button className="randomize" onClick={randomize}>Randomize seed <span>↗</span></button>
-    </aside><div className="preview"><div style={{ position: "relative" }}><GenerativeVisual {...previewControls} style={{ width: "100%", aspectRatio: "1.5 / 1", borderRadius: 22 }} />{isRendering && <div role="status" style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", background: "rgb(16 16 15 / 52%)", color: "#c8ff35", font: "12px 'DM Mono', monospace", letterSpacing: ".08em", textTransform: "uppercase" }}>Rendering preview...</div>}</div><div className="preview-note"><span>{controls.seed}</span></div></div></section>
-    <section className="snippet"><div><h2>API</h2></div><div className="code-wrap"><pre>{code}</pre><button onClick={() => navigator.clipboard?.writeText(code)}>Copy code</button></div></section>
+    </aside><div className="preview"><div ref={previewRef} style={{ position: "relative" }}><GenerativeVisual {...previewControls} style={{ width: "100%", aspectRatio: "1.5 / 1", borderRadius: 22 }} />{isRendering && <div role="status" style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", background: "rgb(16 16 15 / 52%)", color: "#c8ff35", font: "12px 'DM Mono', monospace", letterSpacing: ".08em", textTransform: "uppercase" }}>Rendering preview...</div>}</div><div className="preview-actions" style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 12 }}><button type="button" onClick={copyCode} style={{ border: "1px solid #514d45", background: "transparent", color: "#a8a096", padding: "7px 10px", font: "10px 'DM Mono', monospace", cursor: "pointer" }}>Copy code</button><button type="button" onClick={downloadSvg} style={{ border: "1px solid #514d45", background: "transparent", color: "#a8a096", padding: "7px 10px", font: "10px 'DM Mono', monospace", cursor: "pointer" }}>Download SVG</button></div></div></section>
+    <section className="snippet"><div><h2>API</h2></div><div className="code-wrap"><pre>{code}</pre></div></section>
      <section className="use-cases"><div className="section-title"><h2>Examples</h2></div><div className="case-grid"><Case label="Avatar" className="avatar" seed="alice" controls={exampleControls} visualStyle={exampleStyles.avatar} /><Case label="Card" className="card-art" seed="project" controls={exampleControls} visualStyle={exampleStyles.card} /><Case label="Artwork" className="artwork" seed="artwork" controls={exampleControls} visualStyle={exampleStyles.artwork}><div><span className="art-kicker">Artwork / 01</span><strong>Night bloom</strong></div></Case></div></section>
   </main>;
 }
