@@ -15,6 +15,12 @@ export const GenerativeVisual = memo(function GenerativeVisual({
   softness,
   texture,
   vignette = false,
+  sourceCount,
+  sourceSize,
+  separation,
+  blur,
+  grainAmount,
+  grainSize,
   width,
   height,
   className,
@@ -23,7 +29,7 @@ export const GenerativeVisual = memo(function GenerativeVisual({
 }: GenerativeVisualProps) {
   const reactId = useId();
   const namespace = safeId(reactId);
-  const visual = useMemo(() => generateVisual({ seed, colors, complexity, contrast, distortion, softness, texture, vignette }), [seed, colors, complexity, contrast, distortion, softness, texture, vignette]);
+  const visual = useMemo(() => generateVisual({ seed, colors, complexity, contrast, distortion, softness, texture, vignette, sourceCount, sourceSize, separation, blur, grainAmount, grainSize }), [seed, colors, complexity, contrast, distortion, softness, texture, vignette, sourceCount, sourceSize, separation, blur, grainAmount, grainSize]);
   const sizeStyle = { width, height };
 
   return (

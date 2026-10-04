@@ -9,6 +9,12 @@ export interface GenerativeVisualOptions {
   softness?: number;
   texture?: number;
   vignette?: boolean;
+  sourceCount?: number;
+  sourceSize?: number;
+  separation?: number;
+  blur?: number;
+  grainAmount?: number;
+  grainSize?: number;
 }
 
 export interface GenerativeVisualProps extends GenerativeVisualOptions {

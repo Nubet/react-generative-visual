@@ -43,9 +43,9 @@ export function generateVisual(options: GenerativeVisualOptions): GeneratedVisua
   const softness = clamp(options.softness, DEFAULTS.softness);
   const texture = clamp(options.texture, DEFAULTS.texture);
   const colors = options.colors.length > 0 ? options.colors : FALLBACK_COLORS;
-  const fieldCount = Math.round(3 + complexity * 7);
-  const sourceScale = 0.35 + softness * 0.8;
-  const separation = 0.2 + complexity * 0.6;
+  const fieldCount = Math.round(Math.max(3, Math.min(10, options.sourceCount ?? 3 + complexity * 7)));
+  const sourceScale = Math.max(0.35, Math.min(1.15, options.sourceSize ?? 0.35 + softness * 0.8));
+  const separation = Math.max(0, Math.min(1, options.separation ?? 0.2 + complexity * 0.6));
   const minDistance = (120 + separation * 360) * (fieldCount <= 3 ? 1 : Math.max(0.48, 3 / fieldCount));
   const centers: Array<{ x: number; y: number }> = [];
 
@@ -96,7 +96,7 @@ export function generateVisual(options: GenerativeVisualOptions): GeneratedVisua
       frequencyX: 0.0028 + random() * 0.0025,
       frequencyY: 0.0034 + random() * 0.003,
       displacement: 8 + distortion * 105 + (random() - 0.5) * 18,
-      blur: 18 + softness * 105 + (random() - 0.5) * 18,
+      blur: 18 + Math.max(0.1, Math.min(1, options.blur ?? softness)) * 105 + (random() - 0.5) * 18,
       noiseSeed: noiseSeed + index * 37,
     } satisfies VisualSource;
   });
@@ -104,7 +104,7 @@ export function generateVisual(options: GenerativeVisualOptions): GeneratedVisua
   return {
     background: colors[0],
     sources,
-    grain: texture > 0 ? { coarseFrequency: 0.045 + texture * 0.13, fineFrequency: 0.38 + texture * 0.9, coarseOpacity: texture * 0.82, fineOpacity: texture * 0.96, seed: noiseSeed } : undefined,
+    grain: (options.grainAmount ?? texture) > 0 ? { coarseFrequency: 0.045 + (options.grainSize ?? texture) * 0.13, fineFrequency: 0.38 + (options.grainSize ?? texture) * 0.9, coarseOpacity: (options.grainAmount ?? texture) * 0.82, fineOpacity: (options.grainAmount ?? texture) * 0.96, seed: noiseSeed } : undefined,
     vignette: options.vignette ?? false,
   };
 }
