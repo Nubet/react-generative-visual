@@ -24,4 +24,9 @@ describe("generateVisual", () => {
     expect(() => generateVisual({ ...options, colors: [] })).not.toThrow();
     expect(generateVisual({ ...options, colors: [] }).background).toBeTruthy();
   });
+  it("rejects unsafe color values", () => {
+    const visual = generateVisual({ ...options, colors: ['url("javascript:alert(1)")', '"/><script>alert(1)</script>', "#123456"] });
+    expect(visual.background).toBe("#123456");
+    expect(visual.sources.every((source) => source.color !== 'url("javascript:alert(1)")')).toBe(true);
+  });
 });
