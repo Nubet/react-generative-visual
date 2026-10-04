@@ -1,9 +1,21 @@
 {
-  "name": "react-generative-visual",
-  "version": "0.1.0",
+  "name": "@norbert-fila/react-generative-visual",
+  "version": "0.1.1",
   "description": "Deterministic generative visuals for React.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nubet/react-generative-visual.git"
+  },
+  "homepage": "https://github.com/Nubet/react-generative-visual#readme",
+  "bugs": {
+    "url": "https://github.com/Nubet/react-generative-visual/issues"
+  },
+  "keywords": ["react", "svg", "generative-art", "visual", "deterministic"],
   "type": "module",
   "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "files": ["dist", "README.md", "LICENSE"],
   "main": "./dist/index.js",
   "module": "./dist/index.js",
