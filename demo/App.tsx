@@ -1,13 +1,16 @@
 import { useState, type CSSProperties, type ReactNode } from "react";
 import { GenerativeVisual } from "../src";
 
-const presets = [["#ef2b14", "#ff7818", "#ffb91c", "#e9e31a"], ["#6c27f5", "#b625ff", "#ff18d8", "#e33b8c"], ["#07595b", "#00aaa6", "#19d7c7", "#083d43"], ["#0a1b38", "#183aa8", "#435cff", "#162a68"]];
+const presets = [["#ef2b14", "#ff7818", "#ffb91c", "#e9e31a"], ["#6c27f5", "#b625ff", "#ff18d8", "#e33b8c"], ["#07595b", "#00aaa6", "#19d7c7", "#083d43"], ["#0a1b38", "#183aa8", "#435cff", "#162a68"], ["#ff3b00", "#ff8c00", "#d8ef18", "#e91e13"], ["#092e2b", "#2b7d74", "#86c8ba", "#0d4a44"], ["#4d0828", "#9e1459", "#d61b4d", "#6c1c7a"], ["#20113f", "#5d2bd9", "#0db2d4", "#ef4b92"]];
 type Controls = { seed: string; colors: string[]; complexity: number; contrast: number; distortion: number; softness: number; texture: number; vignette: boolean };
 const initial: Controls = { seed: "purple-forest", colors: presets[1], complexity: 0.6, contrast: 0.8, distortion: 0.55, softness: 0.7, texture: 0.8, vignette: true };
 
 export function App() {
   const [controls, setControls] = useState(initial);
   const update = <K extends keyof Controls>(key: K, value: Controls[K]) => setControls((current) => ({ ...current, [key]: value }));
+  const updateColor = (index: number, color: string) => setControls((current) => ({ ...current, colors: current.colors.map((value, colorIndex) => colorIndex === index ? color : value) }));
+  const addColor = () => setControls((current) => current.colors.length >= 8 ? current : { ...current, colors: [...current.colors, "#ffffff"] });
+  const removeColor = (index: number) => setControls((current) => current.colors.length <= 2 ? current : { ...current, colors: current.colors.filter((_, colorIndex) => colorIndex !== index) });
   const code = `<GenerativeVisual\n  seed="${controls.seed}"\n  colors={${JSON.stringify(controls.colors)}}\n  complexity={${controls.complexity}}\n  contrast={${controls.contrast}}\n  distortion={${controls.distortion}}\n  softness={${controls.softness}}\n  texture={${controls.texture}}\n/>`;
   const randomize = () => update("seed", crypto.randomUUID().slice(0, 8));
   return <main className="page">
@@ -15,6 +18,7 @@ export function App() {
     <section className="workbench"><aside className="controls"><div className="control-heading"><span>Playground</span></div>
       <label>Seed<input value={controls.seed} onChange={(event) => update("seed", event.target.value)} /></label>
       <div className="label-row"><label>Palette</label><span>{controls.colors.length} colors</span></div><div className="swatches">{presets.map((palette, index) => <button key={palette.join("-")} className="swatch" style={{ background: `linear-gradient(135deg, ${palette.join(",")})` }} onClick={() => update("colors", palette)} aria-label={`Use palette ${index + 1}`} />)}</div>
+      <div className="custom-colors">{controls.colors.map((color, index) => <div className="color-row" key={`${index}-${color}`} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}><input type="color" value={color} onChange={(event) => updateColor(index, event.target.value)} aria-label={`Color ${index + 1}`} style={{ width: 30, height: 24, padding: 0, border: 0, background: "transparent" }} /><code style={{ flex: 1, font: "11px 'DM Mono', monospace", color: "#a8a096" }}>{color.toUpperCase()}</code>{controls.colors.length > 2 && <button type="button" onClick={() => removeColor(index)} aria-label={`Remove color ${index + 1}`} style={{ border: 0, background: "transparent", color: "#a8a096", cursor: "pointer", fontSize: 18 }}>×</button>}</div>)}</div><button type="button" className="add-color" onClick={addColor} disabled={controls.colors.length >= 8} style={{ border: "1px solid #514d45", background: "transparent", color: "#a8a096", padding: "7px 9px", cursor: controls.colors.length >= 8 ? "not-allowed" : "pointer", marginBottom: 24 }}>+ Add color</button>
       <Control label="Complexity" value={controls.complexity} onChange={(value) => update("complexity", value)} /><Control label="Contrast" value={controls.contrast} onChange={(value) => update("contrast", value)} /><Control label="Distortion" value={controls.distortion} onChange={(value) => update("distortion", value)} /><Control label="Softness" value={controls.softness} onChange={(value) => update("softness", value)} /><Control label="Texture" value={controls.texture} onChange={(value) => update("texture", value)} />
       <label className="check"><input type="checkbox" checked={controls.vignette} onChange={(event) => update("vignette", event.target.checked)} /> Vignette</label><button className="randomize" onClick={randomize}>Randomize seed <span>↗</span></button>
     </aside><div className="preview"><GenerativeVisual {...controls} style={{ width: "100%", aspectRatio: "1.5 / 1", borderRadius: 22 }} /><div className="preview-note"><span>{controls.seed}</span></div></div></section>
