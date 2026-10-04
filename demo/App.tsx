@@ -288,22 +288,45 @@ export function App() {
         }}
       >
         <h1>Generative Visual</h1>
-        <a
-          href="./docs/"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 10,
-            background: "#c8ff35",
-            color: "#10100f",
-            padding: "11px 14px",
-            font: "600 11px 'Space Grotesk', sans-serif",
-            textDecoration: "none",
-            whiteSpace: "nowrap",
-          }}
+        <nav
+          aria-label="Project links"
+          style={{ display: "flex", alignItems: "center", gap: 8 }}
         >
-          Read docs <span style={{ fontSize: 16, lineHeight: 1 }}>↗</span>
-        </a>
+          <a
+            href="https://github.com/Nubet/react-generative-visual"
+            target="_blank"
+            rel="noreferrer"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              border: "1px solid #514d45",
+              color: "#a8a096",
+              padding: "10px 13px",
+              font: "600 11px 'Space Grotesk', sans-serif",
+              textDecoration: "none",
+              whiteSpace: "nowrap",
+            }}
+          >
+            GitHub <span style={{ fontSize: 15, lineHeight: 1 }}>↗</span>
+          </a>
+          <a
+            href="./docs/"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 10,
+              background: "#c8ff35",
+              color: "#10100f",
+              padding: "11px 14px",
+              font: "600 11px 'Space Grotesk', sans-serif",
+              textDecoration: "none",
+              whiteSpace: "nowrap",
+            }}
+          >
+            Read docs <span style={{ fontSize: 16, lineHeight: 1 }}>↗</span>
+          </a>
+        </nav>
       </header>
       <section className="workbench">
         <aside className="controls">
