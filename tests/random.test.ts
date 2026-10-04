@@ -10,7 +10,7 @@ describe("seeded random", () => {
   });
   it("handles empty, unicode, and long seeds", () => {
     expect(() => seededRandom("")()).not.toThrow();
-    expect(() => seededRandom("żółć")()).not.toThrow();
+    expect(() => seededRandom("unicode-\u00e9")()).not.toThrow();
     expect(() => seededRandom("x".repeat(10000))()).not.toThrow();
   });
 });

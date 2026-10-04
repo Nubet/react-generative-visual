@@ -10,6 +10,9 @@ describe("generateVisual", () => {
   it("changes output for a different seed", () => {
     expect(generateVisual(options)).not.toEqual(generateVisual({ ...options, seed: "album-002" }));
   });
+  it("changes output when an advanced option changes", () => {
+    expect(generateVisual({ ...options, sourceCount: 3 })).not.toEqual(generateVisual({ ...options, sourceCount: 10 }));
+  });
   it("clamps normalized controls and supports 2 to 8 colors", () => {
     for (const count of [2, 3, 4, 8]) {
       const visual = generateVisual({ ...options, colors: Array.from({ length: count }, (_, index) => `#${index}${index}${index}`), complexity: 4, contrast: -2, distortion: 3, softness: 9, texture: -1 });
