@@ -93,7 +93,7 @@ export function App() {
     setTimeout(() => URL.revokeObjectURL(url), 500);
   };
   return <main className="page">
-    <header className="masthead"><h1>Generative Visual</h1></header>
+    <header className="masthead" style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 24 }}><h1>Generative Visual</h1><a href="./docs/" style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#c8ff35", color: "#10100f", padding: "11px 14px", font: "600 11px 'Space Grotesk', sans-serif", textDecoration: "none", whiteSpace: "nowrap" }}>Read docs <span style={{ fontSize: 16, lineHeight: 1 }}>↗</span></a></header>
     <section className="workbench"><aside className="controls"><div className="control-heading"><span>Playground</span></div>
        <label>Seed<input value={controls.seed} onChange={(event) => update("seed", event.target.value)} /></label>
        <div className="label-row"><label>Palette</label><span>{controls.colors.length} colors</span></div><div className="swatches">{presets.map((palette, index) => <button key={palette.join("-")} className="swatch" style={{ background: `linear-gradient(135deg, ${palette.join(",")})` }} onClick={() => update("colors", palette)} aria-label={`Use palette ${index + 1}`} />)}</div>
