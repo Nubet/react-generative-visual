@@ -41,6 +41,7 @@
     "test": "vitest run",
     "build": "vite build && tsc -p tsconfig.build.json",
     "build:demo": "vite build --config vite.demo.config.ts",
+    "format:demo": "prettier --write \"demo/**/*.{ts,tsx,css,html}\"",
     "typecheck": "tsc --noEmit",
     "prepack": "npm run build"
   },
@@ -53,6 +54,7 @@
     "@types/react-dom": "latest",
     "@vitejs/plugin-react": "latest",
     "jsdom": "latest",
+    "prettier": "3.9.9",
     "react": "latest",
     "react-dom": "latest",
     "react-markdown": "10.1.0",

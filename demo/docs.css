@@ -1,2 +1,245 @@
-:root{--docs-bg:#f1efe8;--docs-ink:#171715;--docs-muted:#716e66;--docs-line:#d4d0c5;--docs-accent:#a4d829}.docs-shell{min-height:100vh;background:var(--docs-bg);color:var(--docs-ink)}.docs-header{height:72px;border-bottom:1px solid var(--docs-line);display:flex;align-items:center;justify-content:space-between;padding:0 42px}.docs-brand,.docs-back{color:inherit;text-decoration:none}.docs-brand{font:600 14px 'Space Grotesk',sans-serif;letter-spacing:-.02em}.docs-brand span{color:var(--docs-muted);font-weight:400}.docs-back{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--docs-ink);padding:10px 13px;font:600 10px 'DM Mono',monospace;text-transform:uppercase;letter-spacing:.1em;color:var(--docs-ink)}.docs-back:hover{background:var(--docs-ink);color:var(--docs-bg)}.docs-back span{font-size:14px}.docs-layout{display:grid;grid-template-columns:230px minmax(0,680px);gap:100px;max-width:1120px;margin:0 auto;padding:82px 42px 120px}.docs-sidebar{position:sticky;top:32px;align-self:start}.docs-kicker{margin:0 0 18px;color:var(--docs-muted);font:10px 'DM Mono',monospace;letter-spacing:.14em;text-transform:uppercase}.docs-sidebar nav{display:grid;gap:2px}.docs-sidebar a{border-left:1px solid transparent;padding:9px 12px;color:var(--docs-muted);text-decoration:none;font:13px 'Space Grotesk',sans-serif}.docs-sidebar a:hover,.docs-sidebar a[aria-current=page]{border-color:var(--docs-ink);color:var(--docs-ink)}.docs-sidebar a[aria-current=page]{background:#e5e2d9}.docs-content{min-width:0}.docs-content h1{margin:0 0 24px;font:500 clamp(38px,6vw,68px)/.98 'Space Grotesk',sans-serif;letter-spacing:-.065em}.docs-content h2{margin:62px 0 18px;padding-top:24px;border-top:1px solid var(--docs-line);font:500 25px/1.1 'Space Grotesk',sans-serif;letter-spacing:-.04em}.docs-content h3{margin:32px 0 10px;font:600 15px 'Space Grotesk',sans-serif}.docs-content p,.docs-content li{max-width:650px;color:#4d4a43;font:16px/1.7 'Space Grotesk',sans-serif}.docs-content ul{padding-left:22px}.docs-content li{padding-left:6px}.docs-content a{color:var(--docs-ink);text-decoration-color:#a4d829;text-decoration-thickness:3px;text-underline-offset:3px}.docs-content code{padding:3px 5px;background:#e4e1d8;color:#27261f;font:13px 'DM Mono',monospace}.docs-content pre{overflow:auto;margin:24px 0;padding:22px;background:#1b1b18;color:#e9e6dc;box-shadow:8px 8px 0 #d4d0c5}.docs-content pre code{padding:0;background:transparent;color:inherit;font:13px/1.65 'DM Mono',monospace}.docs-content table{width:100%;border-collapse:collapse;margin:24px 0;font:13px 'Space Grotesk',sans-serif}.docs-content th,.docs-content td{padding:12px 10px;border-bottom:1px solid var(--docs-line);text-align:left;vertical-align:top}.docs-content th{color:var(--docs-ink);font-weight:600}.docs-content td{color:#4d4a43}.docs-content blockquote{margin:24px 0;padding-left:18px;border-left:3px solid var(--docs-accent);color:var(--docs-muted)}
-@media (max-width:760px){.docs-header{height:auto;gap:18px;padding:22px 20px;align-items:flex-start}.docs-back{font-size:9px;text-align:right}.docs-layout{display:block;padding:34px 20px 80px}.docs-sidebar{position:static;margin-bottom:42px}.docs-sidebar nav{display:flex;gap:4px;overflow:auto;padding-bottom:6px}.docs-sidebar a{white-space:nowrap;border-left:0;border-bottom:1px solid transparent}.docs-sidebar a:hover,.docs-sidebar a[aria-current=page]{border-color:var(--docs-ink)}.docs-content h1{font-size:45px}.docs-content h2{margin-top:48px}.docs-content p,.docs-content li{font-size:15px}.docs-content table{display:block;overflow:auto;white-space:nowrap}}
+:root {
+  --docs-bg: #f1efe8;
+  --docs-ink: #171715;
+  --docs-muted: #716e66;
+  --docs-line: #d4d0c5;
+  --docs-accent: #a4d829;
+}
+.docs-shell {
+  min-height: 100vh;
+  background: var(--docs-bg);
+  color: var(--docs-ink);
+}
+.docs-header {
+  height: 72px;
+  border-bottom: 1px solid var(--docs-line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 42px;
+}
+.docs-brand,
+.docs-back {
+  color: inherit;
+  text-decoration: none;
+}
+.docs-brand {
+  font:
+    600 14px "Space Grotesk",
+    sans-serif;
+  letter-spacing: -0.02em;
+}
+.docs-brand span {
+  color: var(--docs-muted);
+  font-weight: 400;
+}
+.docs-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--docs-ink);
+  padding: 10px 13px;
+  font:
+    600 10px "DM Mono",
+    monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--docs-ink);
+}
+.docs-back:hover {
+  background: var(--docs-ink);
+  color: var(--docs-bg);
+}
+.docs-back span {
+  font-size: 14px;
+}
+.docs-layout {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 680px);
+  gap: 100px;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 82px 42px 120px;
+}
+.docs-sidebar {
+  position: sticky;
+  top: 32px;
+  align-self: start;
+}
+.docs-kicker {
+  margin: 0 0 18px;
+  color: var(--docs-muted);
+  font:
+    10px "DM Mono",
+    monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.docs-sidebar nav {
+  display: grid;
+  gap: 2px;
+}
+.docs-sidebar a {
+  border-left: 1px solid transparent;
+  padding: 9px 12px;
+  color: var(--docs-muted);
+  text-decoration: none;
+  font:
+    13px "Space Grotesk",
+    sans-serif;
+}
+.docs-sidebar a:hover,
+.docs-sidebar a[aria-current="page"] {
+  border-color: var(--docs-ink);
+  color: var(--docs-ink);
+}
+.docs-sidebar a[aria-current="page"] {
+  background: #e5e2d9;
+}
+.docs-content {
+  min-width: 0;
+}
+.docs-content h1 {
+  margin: 0 0 24px;
+  font:
+    500 clamp(38px, 6vw, 68px)/0.98 "Space Grotesk",
+    sans-serif;
+  letter-spacing: -0.065em;
+}
+.docs-content h2 {
+  margin: 62px 0 18px;
+  padding-top: 24px;
+  border-top: 1px solid var(--docs-line);
+  font:
+    500 25px/1.1 "Space Grotesk",
+    sans-serif;
+  letter-spacing: -0.04em;
+}
+.docs-content h3 {
+  margin: 32px 0 10px;
+  font:
+    600 15px "Space Grotesk",
+    sans-serif;
+}
+.docs-content p,
+.docs-content li {
+  max-width: 650px;
+  color: #4d4a43;
+  font:
+    16px/1.7 "Space Grotesk",
+    sans-serif;
+}
+.docs-content ul {
+  padding-left: 22px;
+}
+.docs-content li {
+  padding-left: 6px;
+}
+.docs-content a {
+  color: var(--docs-ink);
+  text-decoration-color: #a4d829;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 3px;
+}
+.docs-content code {
+  padding: 3px 5px;
+  background: #e4e1d8;
+  color: #27261f;
+  font:
+    13px "DM Mono",
+    monospace;
+}
+.docs-content pre {
+  overflow: auto;
+  margin: 24px 0;
+  padding: 22px;
+  background: #1b1b18;
+  color: #e9e6dc;
+  box-shadow: 8px 8px 0 #d4d0c5;
+}
+.docs-content pre code {
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font:
+    13px/1.65 "DM Mono",
+    monospace;
+}
+.docs-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font:
+    13px "Space Grotesk",
+    sans-serif;
+}
+.docs-content th,
+.docs-content td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--docs-line);
+  text-align: left;
+  vertical-align: top;
+}
+.docs-content th {
+  color: var(--docs-ink);
+  font-weight: 600;
+}
+.docs-content td {
+  color: #4d4a43;
+}
+.docs-content blockquote {
+  margin: 24px 0;
+  padding-left: 18px;
+  border-left: 3px solid var(--docs-accent);
+  color: var(--docs-muted);
+}
+@media (max-width: 760px) {
+  .docs-header {
+    height: auto;
+    gap: 18px;
+    padding: 22px 20px;
+    align-items: flex-start;
+  }
+  .docs-back {
+    font-size: 9px;
+    text-align: right;
+  }
+  .docs-layout {
+    display: block;
+    padding: 34px 20px 80px;
+  }
+  .docs-sidebar {
+    position: static;
+    margin-bottom: 42px;
+  }
+  .docs-sidebar nav {
+    display: flex;
+    gap: 4px;
+    overflow: auto;
+    padding-bottom: 6px;
+  }
+  .docs-sidebar a {
+    white-space: nowrap;
+    border-left: 0;
+    border-bottom: 1px solid transparent;
+  }
+  .docs-sidebar a:hover,
+  .docs-sidebar a[aria-current="page"] {
+    border-color: var(--docs-ink);
+  }
+  .docs-content h1 {
+    font-size: 45px;
+  }
+  .docs-content h2 {
+    margin-top: 48px;
+  }
+  .docs-content p,
+  .docs-content li {
+    font-size: 15px;
+  }
+  .docs-content table {
+    display: block;
+    overflow: auto;
+    white-space: nowrap;
+  }
+}
