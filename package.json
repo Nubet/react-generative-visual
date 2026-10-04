@@ -1,5 +1,5 @@
 {
-  "name": "generative-visual",
+  "name": "react-generative-visual",
   "version": "0.1.0",
   "description": "Deterministic generative visuals for React.",
   "type": "module",
