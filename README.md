@@ -29,6 +29,10 @@ import { GenerativeVisual } from "@norbert-fila/react-generative-visual";
 
 The same seed and options produce the same visual. The component renders a static SVG and does not use Canvas, WebGL, browser APIs, or external assets.
 
+## Documentation
+
+Read the full technical docs in the [online documentation](https://nubet.github.io/react-generative-visual/docs/) or browse the source Markdown files in [`docs/`](./docs/).
+
 ## Props
 
 ### Core controls
