@@ -14,7 +14,7 @@ export function App() {
   const schedulePreview = (next: Controls) => {
     if (renderTimer.current) clearTimeout(renderTimer.current);
     setIsRendering(true);
-    renderTimer.current = setTimeout(() => startTransition(() => { setPreviewControls(next); setIsRendering(false); }), 120);
+    renderTimer.current = setTimeout(() => startTransition(() => { setPreviewControls(next); requestAnimationFrame(() => setIsRendering(false)); }), 120);
   };
   const update = <K extends keyof Controls>(key: K, value: Controls[K]) => {
     const next = { ...controls, [key]: value } as Controls;
