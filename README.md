@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./assets/readme-banner.jpg" alt="React Generative Visual - deterministic SVG compositions for React" />
+</p>
+
 # @norbert-fila/react-generative-visual
 
 Deterministic generative visuals for React.
@@ -24,10 +28,14 @@ import { GenerativeVisual } from "@norbert-fila/react-generative-visual";
 <GenerativeVisual
   seed="hello"
   colors={["#FF5500", "#FFD600", "#702EFF"]}
+  width="100%"
+  height={320}
 />
 ```
 
 The same seed and options produce the same visual. The component renders a static SVG and does not use Canvas, WebGL, browser APIs, or external assets.
+
+Set `width` and `height` directly, or use `style` and `className` to control the layout. The component does not impose a default visual size.
 
 ## Documentation
 
