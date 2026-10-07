@@ -45,6 +45,24 @@ const initial: Controls = {
 };
 const stylePresets = [
   {
+    id: "haze",
+    name: "Haze",
+    values: {
+      complexity: 0.3,
+      contrast: 0.62,
+      distortion: 0.18,
+      softness: 0.94,
+      texture: 0.86,
+      vignette: false,
+      sourceCount: 4,
+      sourceSize: 1.08,
+      separation: 0.16,
+      blur: 0.94,
+      grainAmount: 0.86,
+      grainSize: 0.78,
+    },
+  },
+  {
     id: "bloom",
     name: "Bloom",
     values: {

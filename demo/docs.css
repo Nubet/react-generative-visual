@@ -99,6 +99,14 @@
 .docs-content {
   min-width: 0;
 }
+.docs-content img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 28px 0;
+  border: 1px solid var(--docs-line);
+  box-shadow: 8px 8px 0 #d4d0c5;
+}
 .docs-content h1 {
   margin: 0 0 24px;
   font:
