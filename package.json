@@ -25,7 +25,8 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "assets/readme-banner.jpg"
   ],
   "main": "./dist/index.js",
   "module": "./dist/index.js",
