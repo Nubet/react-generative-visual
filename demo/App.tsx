@@ -33,6 +33,8 @@ type Controls = {
   grainAmount?: number;
   grainSize?: number;
 };
+type PreviewMode = "single" | "discovery";
+type DiscoveryMode = "seeds" | "explore";
 const initial: Controls = {
   seed: "purple-forest",
   colors: presets[1],
@@ -181,13 +183,77 @@ const exampleStyles = {
   artwork: { width: 320, height: 320, borderRadius: 16 },
 } satisfies Record<string, CSSProperties>;
 
+function buildCode(options: Controls) {
+  const advancedCode = [
+    ["sourceCount", options.sourceCount],
+    ["sourceSize", options.sourceSize],
+    ["separation", options.separation],
+    ["blur", options.blur],
+    ["grainAmount", options.grainAmount],
+    ["grainSize", options.grainSize],
+  ]
+    .filter(([, value]) => value !== undefined)
+    .map(([key, value]) => `  ${key}={${value}}`)
+    .join("\n");
+  return `<GenerativeVisual\n  seed="${options.seed}"\n  colors={${JSON.stringify(options.colors)}}\n  complexity={${options.complexity}}\n  contrast={${options.contrast}}\n  distortion={${options.distortion}}\n  softness={${options.softness}}\n  texture={${options.texture}}${advancedCode ? `\n${advancedCode}` : ""}\n/>`;
+}
+
+function randomBetween(min: number, max: number) {
+  return Math.round((min + Math.random() * (max - min)) * 100) / 100;
+}
+
+function createDiscovery(base: Controls, mode: DiscoveryMode) {
+  return Array.from({ length: 6 }, () => {
+    const seed = crypto.randomUUID().slice(0, 8);
+    if (mode === "seeds") return { ...base, seed };
+    return {
+      ...base,
+      seed,
+      colors: presets[Math.floor(Math.random() * presets.length)],
+      complexity: randomBetween(0.15, 0.9),
+      contrast: randomBetween(0.35, 0.98),
+      distortion: randomBetween(0.08, 0.95),
+      softness: randomBetween(0.2, 0.98),
+      texture: randomBetween(0.1, 0.98),
+      vignette: Math.random() > 0.5,
+      sourceCount: Math.floor(3 + Math.random() * 8),
+      sourceSize: randomBetween(0.35, 1.15),
+      separation: randomBetween(0.05, 0.9),
+      blur: randomBetween(0.1, 1),
+      grainAmount: randomBetween(0.05, 0.98),
+      grainSize: randomBetween(0.1, 0.95),
+    };
+  });
+}
+
+function saveSvg(svg: SVGSVGElement | null, seed: string) {
+  if (!svg) return;
+  const blob = new Blob([new XMLSerializer().serializeToString(svg)], {
+    type: "image/svg+xml",
+  });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${seed || "visual"}.svg`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 500);
+}
+
 export function App() {
   const [controls, setControls] = useState(initial);
   const [previewControls, setPreviewControls] = useState(initial);
   const [activeStyle, setActiveStyle] = useState<string | null>(null);
+  const [previewMode, setPreviewMode] = useState<PreviewMode>("single");
+  const [discoveryMode, setDiscoveryMode] = useState<DiscoveryMode>("seeds");
+  const [discoveryItems, setDiscoveryItems] = useState(() =>
+    createDiscovery(initial, "seeds"),
+  );
   const [isRendering, setIsRendering] = useState(false);
   const renderTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const previewRef = useRef<HTMLDivElement>(null);
+  const discoveryRef = useRef<HTMLDivElement>(null);
   const schedulePreview = (next: Controls) => {
     if (renderTimer.current) clearTimeout(renderTimer.current);
     setIsRendering(true);
@@ -265,34 +331,31 @@ export function App() {
   const grainAmount = controls.grainAmount ?? controls.texture;
   const grainSize = controls.grainSize ?? controls.texture;
   const exampleControls = { ...initial, colors: previewControls.colors };
-  const advancedCode = [
-    ["sourceCount", controls.sourceCount],
-    ["sourceSize", controls.sourceSize],
-    ["separation", controls.separation],
-    ["blur", controls.blur],
-    ["grainAmount", controls.grainAmount],
-    ["grainSize", controls.grainSize],
-  ]
-    .filter(([, value]) => value !== undefined)
-    .map(([key, value]) => `  ${key}={${value}}`)
-    .join("\n");
-  const code = `<GenerativeVisual\n  seed="${controls.seed}"\n  colors={${JSON.stringify(controls.colors)}}\n  complexity={${controls.complexity}}\n  contrast={${controls.contrast}}\n  distortion={${controls.distortion}}\n  softness={${controls.softness}}\n  texture={${controls.texture}}${advancedCode ? `\n${advancedCode}` : ""}\n/>`;
+  const code = buildCode(controls);
   const randomize = () => update("seed", crypto.randomUUID().slice(0, 8));
   const copyCode = () => navigator.clipboard?.writeText(code);
   const downloadSvg = () => {
-    const svg = previewRef.current?.querySelector("svg");
-    if (!svg) return;
-    const blob = new Blob([new XMLSerializer().serializeToString(svg)], {
-      type: "image/svg+xml",
-    });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${controls.seed || "visual"}.svg`;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 500);
+    saveSvg(previewRef.current?.querySelector("svg") ?? null, controls.seed);
+  };
+  const refreshDiscovery = () =>
+    setDiscoveryItems(createDiscovery(controls, discoveryMode));
+  const chooseDiscoveryMode = (mode: DiscoveryMode) => {
+    setDiscoveryMode(mode);
+    setDiscoveryItems(createDiscovery(controls, mode));
+    setPreviewMode("discovery");
+  };
+  const openDiscovery = () => {
+    setDiscoveryItems(createDiscovery(controls, discoveryMode));
+    setPreviewMode("discovery");
+  };
+  const copyDiscoveryCode = (item: Controls) =>
+    navigator.clipboard?.writeText(buildCode(item));
+  const downloadDiscoverySvg = (index: number, item: Controls) => {
+    const svg =
+      discoveryRef.current?.querySelector<SVGSVGElement>(
+        `[data-discovery-index="${index}"] svg`,
+      ) ?? null;
+    saveSvg(svg, item.seed);
   };
   return (
     <main className="page">
@@ -620,72 +683,118 @@ export function App() {
           </button>
         </aside>
         <div className="preview">
-          <div ref={previewRef} style={{ position: "relative" }}>
-            <GenerativeVisual
-              {...previewControls}
-              style={{
-                width: "100%",
-                aspectRatio: "1.5 / 1",
-                borderRadius: 22,
-              }}
-            />
-            {isRendering && (
-              <div
-                role="status"
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  display: "grid",
-                  placeItems: "center",
-                  background: "rgb(16 16 15 / 52%)",
-                  color: "#c8ff35",
-                  font: "12px 'DM Mono', monospace",
-                  letterSpacing: ".08em",
-                  textTransform: "uppercase",
-                }}
-              >
-                Rendering preview...
-              </div>
-            )}
-          </div>
           <div
-            className="preview-actions"
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: 8,
-              marginTop: 12,
-            }}
+            className="preview-modebar"
+            role="tablist"
+            aria-label="Preview mode"
           >
             <button
               type="button"
-              onClick={copyCode}
-              style={{
-                border: "1px solid #514d45",
-                background: "transparent",
-                color: "#a8a096",
-                padding: "7px 10px",
-                font: "10px 'DM Mono', monospace",
-                cursor: "pointer",
-              }}
+              role="tab"
+              aria-selected={previewMode === "single"}
+              className={previewMode === "single" ? "is-active" : ""}
+              onClick={() => setPreviewMode("single")}
             >
-              Copy code
+              Single
             </button>
             <button
               type="button"
-              onClick={downloadSvg}
-              style={{
-                border: "1px solid #514d45",
-                background: "transparent",
-                color: "#a8a096",
-                padding: "7px 10px",
-                font: "10px 'DM Mono', monospace",
-                cursor: "pointer",
-              }}
+              role="tab"
+              aria-selected={previewMode === "discovery"}
+              className={previewMode === "discovery" ? "is-active" : ""}
+              onClick={openDiscovery}
             >
-              Download SVG
+              Discovery
             </button>
           </div>
+          {previewMode === "single" ? (
+            <>
+              <div ref={previewRef} style={{ position: "relative" }}>
+                <GenerativeVisual
+                  {...previewControls}
+                  style={{
+                    width: "100%",
+                    aspectRatio: "1.5 / 1",
+                    borderRadius: 22,
+                  }}
+                />
+                {isRendering && (
+                  <div
+                    role="status"
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      display: "grid",
+                      placeItems: "center",
+                      background: "rgb(16 16 15 / 52%)",
+                      color: "#c8ff35",
+                      font: "12px 'DM Mono', monospace",
+                      letterSpacing: ".08em",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    Rendering preview...
+                  </div>
+                )}
+              </div>
+              <div className="preview-actions">
+                <button type="button" onClick={copyCode}>
+                  Copy code
+                </button>
+                <button type="button" onClick={downloadSvg}>
+                  Download SVG
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="discovery-toolbar">
+                <div
+                  className="discovery-modes"
+                  role="group"
+                  aria-label="Discovery type"
+                >
+                  <button
+                    type="button"
+                    className={discoveryMode === "seeds" ? "is-active" : ""}
+                    onClick={() => chooseDiscoveryMode("seeds")}
+                  >
+                    Seeds
+                  </button>
+                  <button
+                    type="button"
+                    className={discoveryMode === "explore" ? "is-active" : ""}
+                    onClick={() => chooseDiscoveryMode("explore")}
+                  >
+                    Explore
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  className="discovery-shuffle"
+                  onClick={refreshDiscovery}
+                >
+                  Shuffle ↗
+                </button>
+              </div>
+              <p className="discovery-note">
+                {discoveryMode === "seeds"
+                  ? "Same settings, six different seeds"
+                  : "Six seeds with randomized settings"}
+              </p>
+              <div ref={discoveryRef} className="discovery-grid">
+                {discoveryItems.map((item, index) => (
+                  <DiscoveryCard
+                    key={item.seed}
+                    item={item}
+                    index={index}
+                    onCopy={copyDiscoveryCode}
+                    onDownload={downloadDiscoverySvg}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </section>
       <section className="snippet">
@@ -730,6 +839,46 @@ export function App() {
         </div>
       </section>
     </main>
+  );
+}
+
+function DiscoveryCard({
+  item,
+  index,
+  onCopy,
+  onDownload,
+}: {
+  item: Controls;
+  index: number;
+  onCopy: (item: Controls) => void;
+  onDownload: (index: number, item: Controls) => void;
+}) {
+  return (
+    <article className="discovery-card" data-discovery-index={index}>
+      <GenerativeVisual
+        {...item}
+        style={{ width: "100%", aspectRatio: "1.25 / 1", borderRadius: 10 }}
+      />
+      <div className="discovery-card-footer">
+        <code>{item.seed}</code>
+        <div className="discovery-card-actions">
+          <button
+            type="button"
+            onClick={() => onCopy(item)}
+            title="Copy React code"
+          >
+            Copy
+          </button>
+          <button
+            type="button"
+            onClick={() => onDownload(index, item)}
+            title="Download SVG"
+          >
+            SVG
+          </button>
+        </div>
+      </div>
+    </article>
   );
 }
 

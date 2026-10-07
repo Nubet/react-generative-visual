@@ -130,6 +130,114 @@ article p span {
 .preview {
   min-width: 0;
 }
+.preview-modebar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+.preview-modebar button,
+.discovery-modes button,
+.discovery-shuffle,
+.preview-actions button {
+  border: 1px solid #514d45;
+  background: transparent;
+  color: #a8a096;
+  padding: 7px 10px;
+  font:
+    10px "DM Mono",
+    monospace;
+  cursor: pointer;
+}
+.preview-modebar button.is-active,
+.discovery-modes button.is-active {
+  border-color: #f4f0e8;
+  background: #f4f0e8;
+  color: #10100f;
+}
+.preview-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+.discovery-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 4px 0 8px;
+}
+.discovery-modes {
+  display: flex;
+  gap: 4px;
+}
+.discovery-shuffle {
+  color: #c8ff35;
+  border-color: #514d45;
+}
+.discovery-note {
+  margin: 0 0 12px;
+  color: #a8a096;
+  font:
+    10px "DM Mono",
+    monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.discovery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.discovery-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #383630;
+  background: #181815;
+}
+.discovery-card > div:first-child {
+  width: 100%;
+}
+.discovery-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px;
+}
+.discovery-card-footer code {
+  min-width: 0;
+  overflow: hidden;
+  color: #a8a096;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font:
+    9px "DM Mono",
+    monospace;
+}
+.discovery-card-actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 4px;
+}
+.discovery-card-actions button {
+  border: 1px solid #514d45;
+  background: transparent;
+  color: #ded8ce;
+  padding: 4px 6px;
+  font:
+    9px "DM Mono",
+    monospace;
+  cursor: pointer;
+}
+.preview-modebar button:hover,
+.discovery-modes button:hover,
+.discovery-shuffle:hover,
+.preview-actions button:hover,
+.discovery-card-actions button:hover {
+  border-color: #f4f0e8;
+  color: #f4f0e8;
+}
 .preview-note {
   display: flex;
   justify-content: flex-end;
@@ -247,6 +355,10 @@ article p span {
   }
 }
 @media (max-width: 520px) {
+  .discovery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
   .case-grid {
     display: block;
   }
